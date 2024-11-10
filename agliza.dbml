@@ -1,0 +1,450 @@
+Project Agliza {
+  database_type: 'Bubble'
+  Note: '''
+    # Agliza DataBase    
+  '''
+}
+
+Table User {
+  id int [pk, increment]
+  empresa_id int [ref: > Empresa.id] 
+  usuarioTipo_id int [ref: > OptionSetsUsuarioTipo.id] 
+  usuarioPlataforma_id int [ref: > OptionSetsPlataforma.id] 
+  perfil_id int [ref: > Permissionamento.id]
+  cargo_id int [ref: > Cargo.id]
+  admin_master boolean [default: false]  
+  Cliente varchar(255)  
+  cor varchar(255)
+  cpf varchar(255)
+  CRO varchar(255)
+  email varchar(255)
+  Endereco varchar(255)
+  excluido boolean [default: false]
+  foto varchar(255)
+  Modified_Date datetime
+  nome varchar(255)
+  rg varchar(255)
+  Slug varchar(255)
+  telefone varchar(255)
+  temp_passwordz varchar(255)
+  ultimo_login datetime
+  unidades varchar(255)
+  Created_Date datetime
+}
+
+
+Table Empresa {
+  id int [pk, increment]
+  responsavel_id int [ref: > User.id]
+  Creator_id int [ref: > User.id, note: 'Built-in field']
+  documento varchar(255)
+  nome varchar(255)
+  razao_social varchar(255)    
+  Modified_Date datetime [note: 'Built-in field']
+  Created_Date datetime [note: 'Built-in field']
+  Slug varchar(255) [note: 'Built-in field']
+}
+
+Table Agendamento {
+  id int [pk, increment]
+  TipoAgendamento_id int [ref: > OptionSetsTipoAgendamento.id]
+  Profissional_id int [ref: > User.id]
+  procedimentos_id int [ref: > Procedimentos.id] // lista de serviços 
+  Creator_id int [ref: > User.id, note: 'Built-in field']
+  cor varchar(255) [default: '#0080AC']
+  Data_hora_fim datetime
+  Data_hora_inicio datetime
+  dia_todo boolean [default: false]
+  empresa int [ref: > Empresa.id]
+  Excluido boolean [default: false]
+  Horario_range daterange
+  Observacoes text
+  Tempo_estimado varchar(255)
+  Modified_Date datetime [note: 'Built-in field']
+  Created_Date datetime [note: 'Built-in field']
+  Slug varchar(255) [note: 'Built-in field']
+}
+
+Table Paciente {
+  id int [pk, increment]
+  empresa_id int [ref: > Empresa.id]
+  anamneseLista_id int [ref: > Anamnese.id]
+  anamnese boolean [default: false]
+  dentes int [ref: > Arcada.id]
+  cep varchar(10)
+  cidade varchar(255)
+  cpf varchar(11) [unique]
+  Created_Date datetime [note: 'Built-in field']
+  data_nascimento date
+  email varchar(255) [unique]
+  endereco varchar(255)
+  Modified_Date datetime [note: 'Built-in field']
+  nome varchar(255)
+  plano_saude int 
+  sexo varchar(1) [note: 'M: Masculino, F: Feminino']
+  Slug varchar(255) [note: 'Built-in field']
+  telefone varchar(15)
+  estado varchar(2)
+  excluido boolean
+}
+
+Table Anamnese {
+  id int [pk, increment]
+  paciente_id int [ref: > Paciente.id]
+  Creator_id int [ref: > User.id]
+  cliente int 
+  sintomas varchar(255)
+  frequencia varchar(255)
+  duracao varchar(255)
+  tratamento_medico boolean
+  fuma boolean
+  quantos_cigarros varchar(255)
+  motivo_consulta varchar(255)
+  tratamento_anterior varchar(255)
+  cirurgia_recente boolean
+  doenca_contagiosa boolean
+  dosagem_medicamento varchar(255)
+  nome_medicamento varchar(255)
+  ultimo_tratamento_odontologico datetime
+  inicio_sintomas datetime
+  mae_diabetica boolean
+  pai_diabetico boolean
+  ambos_diabeticos boolean
+  sangramento_excessivo boolean
+  bruxismo boolean
+  alergia_medicamento boolean
+  problema_cardiaco boolean
+  diabetes_familiar boolean
+  limpeza boolean
+  procedimento_odontologico boolean
+  reacao_anestesia_local boolean
+  diabete boolean
+  sensibilidade_dentes boolean
+  dor_cabeca_face boolean
+  Modified_Date datetime
+  Created_Date datetime
+  Slug varchar(255)
+}
+
+
+Table Orcamento{
+  id int [pk, increment]
+  arcada_id int [ref: > Arcada.id] // lista de Option Sets
+  cliente_id int [ref: > Cliente.id] 
+  condicao_pacgamento_id int [ref: > CondicaoPagamento.id]
+  empresa_id int [ref: > Empresa.id]
+  paciente_id int [ref: > Paciente.id]
+  produtos_id int [ref: > ComponenteOrcamento.id] // lista de componentes 
+  status_id int [ref: > StatusOrcamento.id] // Option Sets
+  tipo_id int [ref: > TipoOrcamento.id] // Option Sets
+  unidade_id int [ref: > Unidade.id] // Option Sets
+  vendedor_id int [ref: > User.id] 
+  creator_id int [ref: > User.id]
+  comprovantePagamento varchar[255]
+  data datetime
+  descontoTotal float 
+  descricao text 
+  enviado boolean
+  erroTotvs text 
+  frete float 
+  observacoes text 
+  subtotal float 
+  total float 
+  modified_date datetime
+  created_date datetime
+  slug text 
+}
+
+Table Procedimentos {
+  id int [pk, increment]
+  orcamento_id int [ref: > Orcamento.id]
+  servico_id int [ref: > Servico.id] 
+  tipo_id int [ref: > ProcedimentoTipo.id] // Option Sets
+  dente_id int [ref: > Arcada.id] // lista de dentes 
+  tipoProcedimento int [ref: > TipoProcedimento.id] // Option Sets 
+  implante int [ref: > Implante.id] // lista de Implantes
+  agendamento_id int [ref: > Agendamento.id] // um agendamento
+  avulso boolean
+  isExtraido boolean
+  isCervical boolean
+  isDistal boolean
+  isIncisal boolean
+  isLingual boolean
+  isMesial boolean
+  isOclusal boolean
+  isPalatino boolean
+  isVestibular boolean   
+  etiquetaImplante text
+  observacao text
+  status_id int [ref: > StatusProcedimento.id] 
+  creator_id int [ref: > User.id]
+  modified_date datetime
+  created_date datetime
+  slug text
+}
+
+Table Implante {
+  id text
+  1_referencia text
+  2_plataforma int [ref: > implantePlataforma.id] // Option Sets
+  3_comp text
+  4_tipo int [ref: > implanteTipo.id] // Option Sets
+  5_marca int [ref: > implanteMarca.id] // Option Sets
+  6_modelo text 
+  7_microplant text 
+  8_plat text 
+  9_sistema int [ref: > Sistema.id] // Option Sets
+}
+
+Table Servico {
+  id int [pk, increment]
+  cliente_id int [ref: > Cliente.id]
+  empresa_id int [ref: > Empresa.id]
+  especialidade_id int [ref: > Especialidade.id] // lista Option Sets
+  tempo_execucao int [ref: > TempoExecucao.id] // Option Sets
+  custo float 
+  codigo text
+  nome text
+  preco float
+  creator_id int [ref: > User.id]
+  modified_date datetime
+  created_date datetime
+  slug text
+}
+
+
+
+
+Table Transacao {
+    tipo_id int [ref: > TipoTransacao.id] // Option-sets 
+    status_id int [ref: > StatusTransacao.id] // Option-sets 
+    fornecedor_id int [ref: > Fornecedor.id] // Option-sets
+    empresa_id int [ref: > Empresa.id] // 1:1
+    orcamento_id int [ref: > Orcamento.id] // 1:1
+    codigo text
+    data date
+    anexos text // lista de arquivos
+    descricao text
+    recorrente boolean 
+    tempoCobranca_id int [ref: > TempoCobranca.id] // Option-sets 
+    valor number
+}
+
+
+Table Cliente { // [WiP] tabela criada para exibir relacionamento com Orçamento
+  id int [pk, increment]
+}
+
+Table CondicaoPagamento { // [WiP] tabela criada para exibir relacionamento com Orçamento
+  id int [pk, increment]
+}
+
+Table ComponenteOrcamento { 
+  id int [pk, increment]
+  componente_id int [ref: > Componente.id] 
+  orcamento_id int [ref: > Orcamento.id] 
+  desconto number
+  quantidade number 
+  subtotal number
+  temporario boolean
+  valorDesconto number  
+}
+
+
+Table Componente { 
+  id int [pk, increment]
+  01_codigo text
+  02_nome text
+  03_descricao text
+  04_otimizado text
+  05_especie_id int [ref: > Especie.id] // Option-Sets
+  06_sistema_id int [ref: > Sistema.id] // Option-Sets
+  07_tipoProtese_id int [ref: > TipoProteses.id] // Lista de Tipo de Proteses
+  08_convencionalDigital_id int [ref: > ConvecionalDigital.id] // Lista de Convencional Digitals
+  09_unitariaMultipla_id int [ref: > UnitariaMultipla.id] // Lista de Unitaria Multipla
+  10_sobreImplanteIntermediarios_id int [ref: > SobreImplanteIntermediarios.id] // Lista de Sobre Implante Intermediarios
+  11_tipoIntermediario_id int [ref: > TipoIntermediario.id] // Option-Sets 
+  12_cerecExocad_id int [ref: > CerecExocad.id] // Lista de Cerec Exocad
+  13_precoVenda number
+  14_outros text
+  creator user_id [ref: > User.id]
+}
+
+
+Table Permissionamento {
+  id int [pk, increment]
+  dashboard_operar boolean
+  dashboard_visualizar boolean
+  empresa_id int [ref: > Empresa.id] // Tabela
+  modulos_id int [ref: > Modulos.id] // Lista de Option-Sets 
+  tipoUsuario_id text [ref: > OptionSetsUsuarioTipo.id] // Option-sets 
+}
+
+Table Notificacoes {
+  id int [pk, increment]
+  empresa_id int [ref: > Empresa.id]
+  creator_id int [ref: > User.id]  
+  titulo text
+  mensagem text 
+  lida boolean
+  created_date datetime  
+}
+
+
+
+Table Cargo {
+  id int [pk, increment]
+  nome varchat(50)
+  Modified_Date datetime
+  Created_Date datetime
+}
+
+
+// Option-Sets
+
+Table Modulos { // 
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Dashboard\nAgenda\nOrçamentos\nPacientes\nServiços\nEquipe\nLoja\nFinanceiro\nNotificações\nTutoriais\nMinha conta\nConfigurações']
+}
+
+Table StatusTransacao { // 
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'A pagar\nA receber\nPago\nRecebido\nVencido\nCancelado']
+}
+
+Table Fornecedor { // 
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'A\nB\nC']
+}
+
+Table TempoCobranca { // 
+  id int [pk, increment]
+  options varchar(50) [unique, note: '01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12']
+}
+
+Table TipoTransacao { // 
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Despesa\nReceita']
+}
+
+
+Table Especialidade {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Procedimento odontológico\nOutros']
+}
+
+Table TempoExecucao {
+  id int [pk, increment]
+  options varchar(50) [unique, note: '00:20\n00:40\n01:00\n01:20\n01:40\n02:00']
+}
+
+Table ProcedimentoTipo {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Serviço\nImplante\nPrótese']
+}
+
+
+Table Arcada {
+  id int [pk, increment]
+  ausente text
+  implante text
+  implante_protese text 
+  padrao text
+  options varchar(50) [unique, note: '11\n12\n13\n14\n15\n16\n17\n18\n21\n22\n23\n24\n25\n26\n27\n28\n31\n32\n33\n34\n35\n36\n37\n38\n41\n42\n43\n44\n45\n46\n47\n48'
+]
+}
+
+Table StatusOrcamento {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Rascunho\nAguardando\nReprovado\nRecusado\nAprovado\nRemovido']
+}
+
+Table TipoOrcamento {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'CRM\nClínica\nLaboratório']
+}
+
+Table Unidade {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'SP - 03\nMatriz SP - 01\nRECIFE - 02']
+}
+
+Table OptionSetsUsuarioTipo {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Administrador\nComercial\nDentista\nFinanceiro']
+}
+
+Table OptionSetsPlataforma {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'CRM\nClínica\nLaboratório\nSistema']
+}
+
+Table OptionSetsTipoAgendamento {
+  id int [pk, increment]
+  options varchar(50) [unique, note: 'Tratamento\nAvaliação\nPrimeira avaliação\nUrgência\nPlano odontológico\nRetrabalho']
+}
+
+Table StatusProcedimento {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Existente\nA fazer\nFeito']
+}
+
+Table TipoProcedimento {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Servico\nImplante\nProtese']
+}
+
+Table implantePlataforma {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Referências da base do Alexandre']
+}
+
+Table implanteTipo {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Referências da base do Alexandre']
+}
+
+Table implanteMarca {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Referências da base do Alexandre']
+}
+
+Table Sistema {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Referências da base do Alexandre']
+}
+
+Table Especie {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'COMPONENTES\nCHAVES\NINSTRUMENTAL\NKIT\NPARAFUSOS\NEXTERTO ÓSSEO']
+}
+
+Table TipoProteses {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Overdenture\nCicatrizadores\nProvisórias\nDefinitivas']
+}
+
+Table ConvecionalDigital {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Convencionsl\nDigital']
+}
+
+Table UnitariaMultipla {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Unitaria\nMultipla']
+}
+
+Table SobreImplanteIntermediarios {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Direto sobre o implante\nIntermediário']
+}
+
+Table TipoIntermediario {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Estheticone\nMini Estheticone\nMini Pilar\nPilar Interface\nPilar CM / GT\nPilar de Preparo\nMunhão Universal\nT-Base']
+}
+
+Table CerecExocad {
+  id int [pk, increment]
+  options varchar(200) [unique, note :'Cerec\nExocad']
+}
